@@ -57,9 +57,7 @@ extra-deps:
     commit: 86f0cb4705f46307e4c89e7ef4c90142882cce54
     subdirs:
       - cardano-ledger
-      - cardano-ledger/test
       - crypto
-      - crypto/test
 
   - git: https://github.com/input-output-hk/cardano-ledger-specs
     commit: 318f5a1594a23aedadb3977ddd5a32230c8be4fe
@@ -81,7 +79,6 @@ extra-deps:
     commit: a7b403c1762a6a122a691df816c26563b7e547f8
     subdirs:
       - binary
-      - binary/test
       - cardano-crypto-class
       - slotting
 
