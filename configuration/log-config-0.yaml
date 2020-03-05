@@ -30,6 +30,9 @@ setupScribes:
   - scKind: FileSK
     scName: "logs/node-0.log"
     scFormat: ScText
+  - scKind: FileSK
+    scName: "logs/node-0.json"
+    scFormat: ScJson
   - scKind: StdoutSK
     scName: stdout
     scFormat: ScText
@@ -39,6 +42,8 @@ setupScribes:
 defaultScribes:
   - - FileSK
     - "logs/node-0.log"
+  - - FileSK
+    - "logs/node-0.json"
   - - StdoutSK
     - stdout
 
@@ -116,7 +121,7 @@ LastKnownBlockVersion-Alt: 0
 # MinimalVerbosity: Minimal level of the rendering of captured items
 # MaximalVerbosity: Maximal level of the rendering of captured items
 # NormalVerbosity: the default level of the rendering of captured items
-TracingVerbosity: NormalVerbosity
+TracingVerbosity: MaximalVerbosity
 
 # Trace BlockFetch client.
 TraceBlockFetchClient: True
