@@ -363,7 +363,7 @@ getLocalTip
   -> AssociateWithIOCP
   -> IO ()
 getLocalTip configFp mSockPath iocp = do
-  nc <- parseNodeConfigurationFP $ unConfigPath configFp
+  nc <- parseNodeConfigurationFP configFp
   sockPath <- return $ chooseSocketPath (ncSocketPath nc) mSockPath
   eGenHash <- runExceptT $ getGenesisHash (ncGenesisFile nc)
 

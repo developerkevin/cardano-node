@@ -17,14 +17,13 @@ import           Cardano.Config.Protocol(SomeProtocol(..), fromProtocol)
 import           Ouroboros.Consensus.NodeId (NodeId (..))
 
 import           Cardano.Config.Protocol (ProtocolInstantiationError)
-import           Cardano.Config.Types ( ConfigYamlFilePath(..), NodeConfiguration(..)
-                                      , parseNodeConfigurationFP)
+import           Cardano.Config.Types (NodeConfiguration(..), parseNodeConfigurationFP)
 import           Cardano.Wallet.Client
 import           Cardano.Wallet.Logging (WalletCLI (..))
 
 runClient :: WalletCLI -> Trace IO Text -> IO ()
 runClient (WalletCLI config delegCertFile gHash gFile sKeyFile socketFp) tracer = do
-    nc <- parseNodeConfigurationFP $ unConfigPath config
+    nc <- parseNodeConfigurationFP config
     let coreNodeId = case ncNodeId nc of
                        Nothing -> panic "Cardano.Wallet.Run.srunClient: NodeId not specified"
                        Just (CoreId nid) -> nid

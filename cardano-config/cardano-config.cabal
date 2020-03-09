@@ -34,7 +34,9 @@ library
                      , cardano-shell
                      , cborg
                      , contra-tracer
+                     , directory
                      , file-embed
+                     , filepath
                      , generic-monoid
                      , iohk-monitoring
                      , lobemo-backend-aggregation

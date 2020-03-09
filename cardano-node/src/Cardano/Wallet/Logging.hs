@@ -27,7 +27,7 @@ createLoggingFeatureWallet _ wCli = do
     --
     -- Currently we parse outside the features since we want to have a complete
     -- parser for __every feature__.
-    nc <- parseNodeConfigurationFP . unConfigPath $ waConfig wCli
+    nc <- parseNodeConfigurationFP $ waConfig wCli
     let logConfigFp = if ncLoggingSwitch nc then Just . unConfigPath $ waConfig wCli else Nothing
 
     (disabled', loggingConfiguration) <- loggingCLIConfiguration
