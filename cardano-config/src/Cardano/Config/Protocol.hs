@@ -23,6 +23,7 @@ import           Control.Monad.Trans.Except (ExceptT)
 import           Control.Monad.Trans.Except.Extra (bimapExceptT, firstExceptT,
                                                    hoistEither, left)
 import qualified Data.ByteString.Lazy as LB
+import           Data.Hash.IsHash (IsHash)
 
 import           Cardano.BM.Tracing (ToObject)
 import qualified Cardano.Chain.Genesis as Genesis
@@ -72,6 +73,8 @@ type TraceConstraints blk =
     , Condense (HeaderHash blk)
     , Condense (GenTx blk)
     , Condense (TxId (GenTx blk))
+    , IsHash (HeaderHash blk)
+    , IsHash (TxId (GenTx blk))
     , HasTxs blk
     , HasTxId (GenTx blk)
     , Show (ApplyTxErr blk)

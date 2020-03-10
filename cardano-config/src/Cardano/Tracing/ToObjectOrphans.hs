@@ -21,6 +21,7 @@ import           Cardano.Prelude hiding (atomically, show)
 import           Prelude (String, show, id)
 
 import           Data.Aeson (Value (..), toJSON, (.=))
+import           Data.Hash.IsHash (IsHash, shortHashHex)
 import           Data.Text (pack)
 import qualified Data.List.NonEmpty as NonEmpty
 import qualified Data.Vector as V
@@ -468,8 +469,8 @@ instance ( ToObject (AnyMessage ps)
   toObject verb (TraceRecvMsg m) = mkObject
     [ "kind" .= String "Recv" , "msg" .= toObject verb m ]
 
-instance ( Condense (HeaderHash blk)
-         , Condense (TxId (GenTx blk))
+instance ( IsHash (TxId (GenTx blk))
+         , IsHash (HeaderHash blk)
          , HasHeader blk
          , HasTxs blk
          , HasTxId (GenTx blk)
@@ -478,12 +479,12 @@ instance ( Condense (HeaderHash blk)
   toObject _verb (AnyMessage (MsgBlock blk)) =
     mkObject
       [ "kind" .= String "MsgBlock"
-      , "blkid" .= String (pack . condense $ blockHash blk)
+      , "blkid" .= String (shortHashHex $ blockHash blk)
       , "txids" .= Array (V.fromList . fmap presentTx $ extractTxs blk)
       ]
    where
      presentTx :: GenTx blk -> Value
-     presentTx =  String . pack . condense . txId
+     presentTx =  String . shortHashHex . txId
   toObject _verb _ =
     mkObject
       [ "kind" .= String "BlockFetchSomething" ]
