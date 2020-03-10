@@ -123,7 +123,7 @@ data ProtocolInstantiationError =
     ByronLegacyProtocolNotImplemented
   | CanonicalDecodeFailure FilePath Text
   | DelegationCertificateFilepathNotSpecified
-  | GenesisConfigurationError Genesis.ConfigurationError
+  | GenesisConfigurationError FilePath Genesis.ConfigurationError
   | GenesisHashDecodeFailure Text
   | MissingCoreNodeId
   | MissingNumCoreNodes
@@ -173,16 +173,17 @@ fromProtocol _ nId mNumCoreNodes _ _ _ _ _ _ MockPBFT =
       (singletonSlotLengths mockSlotLength)
       cid
 fromProtocol gHash _ _ mGenFile nMagic sigThresh delCertFp sKeyFp update RealPBFT = do
-    let genFile = fromMaybe ( panic $ "Cardano.Config.Protocol.fromProtocol: "
-                                    <> "Genesis file not specified"
-                            ) mGenFile
+    let genFile = unGenesisFile $ fromMaybe
+                                ( panic $ "Cardano.Config.Protocol.fromProtocol: "
+                                        <> "Genesis file not specified"
+                                ) mGenFile
     --TODO: This should accept a filepath to the genesis hash
     -- so the error can show where the hash exists
     genHash <- decodeGenesisHash gHash
 
-    gc <- firstExceptT GenesisConfigurationError $ Genesis.mkConfigFromFile
+    gc <- firstExceptT (GenesisConfigurationError genFile) $ Genesis.mkConfigFromFile
              nMagic
-             (unGenesisFile genFile)
+             genFile
              genHash
 
     optionalLeaderCredentials <- readLeaderCredentials
@@ -261,7 +262,8 @@ renderProtocolInstantiationError pie =
     DelegationCertificateFilepathNotSpecified -> "Delegation certificate filepath not specified"
     GenesisHashDecodeFailure failure -> "Genesis hash decode failure: " <> failure
     --TODO: Implement configuration error render function in cardano-ledger
-    GenesisConfigurationError genesisConfigError -> "Genesis configuration error: " <> (T.pack $ show genesisConfigError)
+    GenesisConfigurationError fp genesisConfigError -> "Genesis configuration error in: " <> toS fp
+                                                       <> " Error: " <> (T.pack $ show genesisConfigError)
     MissingCoreNodeId -> "Missing core node id"
     MissingNumCoreNodes -> "NumCoreNodes: not specified in configuration yaml file."
     -- TODO: Implement PBftLeaderCredentialsError render function in ouroboros-network
